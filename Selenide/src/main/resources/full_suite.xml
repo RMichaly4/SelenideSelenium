@@ -1,0 +1,23 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="full_suite" verbose="1" parallel="classes" thread-count="1">
+    <test name="Tests">
+        <classes>
+            <class name="project.tests.ApplicationActionsTest_2">
+                <methods>
+                    <include name="verifyDropdownListValues"/>
+                    <include name="verifyDropdownListValues_2"/>
+                    <!--<include name="scrollToElement"/>-->
+                    <!--<include name="selectUserProfile"/>-->
+                </methods>
+            </class>
+            <class name="project.tests.ApplicationActionsTest">
+                <methods>
+                    <include name="verifyDropdownListValues"/>
+                    <include name="verifyDropdownListValues_2"/>
+                    <!--<include name="scrollToElement"/>-->
+                    <!--<include name="selectUserProfile"/>-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
