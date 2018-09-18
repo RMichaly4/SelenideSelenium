@@ -18,36 +18,31 @@ import java.text.SimpleDateFormat;
 
 public class BrowserSettings {
 
-    public static final String APPLICATION_URL = ConfigReader.getValueByKey("app.url");
     public int WAITTIME = Integer.parseInt(ConfigReader.getValueByKey("wait.time"));
-    public static final String USERNAME = ConfigReader.getValueByKey("user.login");
-    public static final String PASSWORD = ConfigReader.getValueByKey("user.password");
     public boolean isSeleniumGrid = Boolean.valueOf(ConfigReader.getValueByKey("selenium.grid.enabled"));
     public static DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("ddMMYYHHmmss");
-    public static final String BROWSER_PROFILE_PATH = ConfigReader.getValueByKey("profile.path");
-    public static final String FFdriverPath = ConfigReader.getValueByKey("ffdriver.path");
-    public static final String HubPath = ConfigReader.getValueByKey("hub.url");
+
 
     protected WebDriver driver;
     protected WebDriverWait wait;
 
     @BeforeClass
     public void setUp() throws Exception{
-        System.setProperty("webdriver.gecko.driver", FFdriverPath);
+        System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("ffdriver.path"));
         DesiredCapabilities cap = DesiredCapabilities.firefox();
 
         //---Set FF profile
-        File profilePath = new File(BROWSER_PROFILE_PATH);
+        File profilePath = new File(ConfigReader.getValueByKey("profile.path"));
         FirefoxProfile profile = new FirefoxProfile(profilePath);
         cap.setCapability(FirefoxDriver.PROFILE, profile);
 
         cap.setCapability("video", true); //Videorecording on: http://selenium-hub:8080/grid/resources/remote?session=SELENIUMSESSIONID
         cap.setCapability("project", "Test Project");
         cap.setCapability("apm_id", "TestProject");
-//        cap.setCapability("user", USERNAME); //TechUser login
-//        cap.setCapability("password", PASSWORD); //TechUser pass
+        //cap.setCapability("user", ConfigReader.getValueByKey("user.login")); //TechUser login
+        //cap.setCapability("password", ConfigReader.getValueByKey("user.password")); //TechUser pass
         if (isSeleniumGrid) {
-            driver = new RemoteWebDriver(new URL(HubPath), cap);
+            driver = new RemoteWebDriver(new URL(ConfigReader.getValueByKey("hub.url")), cap);
             String sessionId = ((RemoteWebDriver)driver).getSessionId().toString();
             String videoURL = "http://selenium-hub:8080/grid/resources/remote?session=" + sessionId;
             System.out.println("live, then video recording can be viewed @ " + videoURL);}
@@ -55,7 +50,7 @@ public class BrowserSettings {
 
         wait = new WebDriverWait(driver, WAITTIME);
         driver.manage().window().maximize();
-//        driver.get(APPLICATION_URL);
+        //driver.get(ConfigReader.getValueByKey("app.url"));
         Thread.sleep(2000);
         initialize();
     }
