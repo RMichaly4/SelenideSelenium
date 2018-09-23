@@ -40,17 +40,13 @@ public class BrowserSettings {
 
 //        cap.setCapability("apm_id", "Test Application");
 //        cap.setCapability("project", "TestApp");
-//        cap.setCapability("screen-resolution", "1920x1080");
-        //cap.setCapability(FirefoxDriver.PROFILE, profile);
-        //cap.setCapability("user", prop.getProperty("user.login"));
-        //cap.setCapability("password", prop.getProperty("user.password"));
+//        cap.setCapability("user", prop.getProperty("user.login"));
+//        cap.setCapability("password", prop.getProperty("user.password"));
 
 
         if (prop.getProperty("browser.type").equalsIgnoreCase("chrome")) {
             DesiredCapabilities cap2 = DesiredCapabilities.chrome();
             System.setProperty("webdriver.gecko.driver", prop.getProperty("chrome.driver.path"));
-//            driver = new ChromeDriver(cap2);
-//            WebDriverRunner.setWebDriver(driver);
             cap2.setCapability("screen-resolution", "1920x1080");
         }
         if (prop.getProperty("browser.type").equalsIgnoreCase("firefox")) {
