@@ -94,5 +94,14 @@
                 </filters>
             </build>
         </profile>
+        <profile>
+            <id>firefox</id>
+            <build>
+                <filters>
+                    <filter>src/test/profiles/firefox.profile</filter>
+                </filters>
+            </build>
+        </profile>
     </profiles>
+
 </project>

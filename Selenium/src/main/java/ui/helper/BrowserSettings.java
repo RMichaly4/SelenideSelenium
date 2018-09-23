@@ -1,5 +1,6 @@
 package ui.helper;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -18,40 +19,50 @@ import java.text.SimpleDateFormat;
 
 public class BrowserSettings {
 
+    public static final String APPLICATION_URL = ConfigReader.getValueByKey("app.url");
     public int WAITTIME = Integer.parseInt(ConfigReader.getValueByKey("wait.time"));
-    public boolean isSeleniumGrid = Boolean.valueOf(ConfigReader.getValueByKey("selenium.grid.enabled"));
+    public static final String USERNAME = ConfigReader.getValueByKey("user.login");
+    public static final String PASSWORD = ConfigReader.getValueByKey("user.password");
     public static DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("ddMMYYHHmmss");
-
+    public static final String BROWSER_PROFILE_PATH = ConfigReader.getValueByKey("profile.path");
 
     protected WebDriver driver;
     protected WebDriverWait wait;
 
     @BeforeClass
     public void setUp() throws Exception{
-        System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("ffdriver.path"));
-        DesiredCapabilities cap = DesiredCapabilities.firefox();
 
         //---Set FF profile
-        File profilePath = new File(ConfigReader.getValueByKey("profile.path"));
+        File profilePath = new File(BROWSER_PROFILE_PATH);
         FirefoxProfile profile = new FirefoxProfile(profilePath);
-        cap.setCapability(FirefoxDriver.PROFILE, profile);
 
-        cap.setCapability("video", true); //Videorecording on: http://selenium-hub:8080/grid/resources/remote?session=SELENIUMSESSIONID
-        cap.setCapability("project", "Test Project");
-        cap.setCapability("apm_id", "TestProject");
-        //cap.setCapability("user", ConfigReader.getValueByKey("user.login")); //TechUser login
-        //cap.setCapability("password", ConfigReader.getValueByKey("user.password")); //TechUser pass
-        if (isSeleniumGrid) {
+        if (ConfigReader.getValueByKey("browser.type").equalsIgnoreCase("chrome")) {
+            System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("chrome.driver.path"));
+            DesiredCapabilities cap = DesiredCapabilities.chrome();
+            //WebDriverRunner.setWebDriver(driver);
+            cap.setCapability("screen-resolution", "1920x1080");
+            driver = new FirefoxDriver();
+        }
+        if (ConfigReader.getValueByKey("browser.type").equalsIgnoreCase("firefox")) {
+            DesiredCapabilities cap = DesiredCapabilities.firefox();
+            System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("ffdriver.path"));
+            cap.setCapability(FirefoxDriver.PROFILE, profile);
+            cap.setCapability("screen-resolution", "1920x1080");
+
+            driver = new FirefoxDriver(cap);
+        }
+        if (ConfigReader.getValueByKey("browser.type").equalsIgnoreCase("grid")) {
+            DesiredCapabilities cap = DesiredCapabilities.firefox();
+            System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("ffdriver.path"));
+            cap.setCapability(FirefoxDriver.PROFILE, profile);
+
+            RemoteWebDriver driver;
             driver = new RemoteWebDriver(new URL(ConfigReader.getValueByKey("hub.url")), cap);
-            String sessionId = ((RemoteWebDriver)driver).getSessionId().toString();
+            String sessionId = driver.getSessionId().toString();
             String videoURL = "http://selenium-hub:8080/grid/resources/remote?session=" + sessionId;
-            System.out.println("live, then video recording can be viewed @ " + videoURL);}
-        else {driver = new FirefoxDriver();}
+            System.out.println("live, then video recording can be viewed @ " + videoURL);
+        }
 
-        wait = new WebDriverWait(driver, WAITTIME);
-        driver.manage().window().maximize();
-        //driver.get(ConfigReader.getValueByKey("app.url"));
-        Thread.sleep(2000);
         initialize();
     }
 
