@@ -1,5 +1,7 @@
 package ui.pageObjects;
 
+import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -11,7 +13,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import ui.helper.BrowserSettings;
 import ui.helper.ImageImpl;
+
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 
 import static org.testng.Assert.assertEquals;
@@ -242,6 +247,45 @@ public class ApplicationActions extends BrowserSettings{
         Assert.assertEquals(color, hex1);
         return this;
     }
+
+    public static void exportXlsx() throws IOException, AWTException {
+
+ /*       File ActualExportFile = new File("C:\\file_downloaded.xlsx");
+        if (ActualExportFile.exists())
+            ActualExportFile.delete();
+        //wait 10s while file will be downloaded
+        int timeout = 0;
+        while (!ActualExportFile.exists()) {
+            sleep(1000);
+            timeout += 1000;
+            if (timeout <= 10000) break;
+        }*/
+        XSSFWorkbook ActualExportWorkbook = new XSSFWorkbook("src/test/excelFiles/file_original.xlsx");
+        XSSFWorkbook ExpectedExportWorkbook = new XSSFWorkbook("src/test/excelFiles/file_downloaded.xlsx");
+
+        //delete dates from Actual export file because it's not important part but provide ability to compare actual and expected files.
+/*        XSSFSheet sheet = ActualExportWorkbook.getSheet("Sheet1");
+        Iterator<Row> rows = sheet.rowIterator();
+        while (rows.hasNext()) {
+            XSSFRow row = (XSSFRow) rows.next();
+            for (int i = 0; i < row.getLastCellNum(); i++) {
+                if (row.getCell(i).getStringCellValue().equals("Source Date") || row.getCell(i).getStringCellValue().equals("Portfolio Name")) {
+                    row.getCell(i + 1).setCellValue("-");
+                }
+            }
+        }*/
+
+        //compare expected and actual export files
+        XSSFExcelExtractor ActualWorkbookExtractor = new XSSFExcelExtractor(ActualExportWorkbook);
+        ActualWorkbookExtractor.setIncludeSheetNames(true);
+
+        XSSFExcelExtractor ExpectedWorkbookExtractor = new XSSFExcelExtractor(ExpectedExportWorkbook);
+        ExpectedWorkbookExtractor.setIncludeSheetNames(true);
+        assertEquals(ActualWorkbookExtractor.getText(), ExpectedWorkbookExtractor.getText());
+
+        ActualExportWorkbook.close();
+    }
+
 
 
 }

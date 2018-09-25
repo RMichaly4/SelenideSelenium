@@ -46,6 +46,7 @@ public class BrowserSettings {
         if (ConfigReader.getValueByKey("browser.type").equalsIgnoreCase("firefox")) {
             DesiredCapabilities cap = DesiredCapabilities.firefox();
             System.setProperty("webdriver.gecko.driver", ConfigReader.getValueByKey("ffdriver.path"));
+//            System.setProperty("webdriver.firefox.bin", "C:\\customFolder\\FF\\firefox.exe");  //comment path if FF in ProgrammFiles
             cap.setCapability(FirefoxDriver.PROFILE, profile);
             cap.setCapability("screen-resolution", "1920x1080");
 
