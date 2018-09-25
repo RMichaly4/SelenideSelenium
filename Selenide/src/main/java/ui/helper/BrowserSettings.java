@@ -52,7 +52,7 @@ public class BrowserSettings {
         if (prop.getProperty("browser.type").equalsIgnoreCase("firefox")) {
             DesiredCapabilities cap = DesiredCapabilities.firefox();
             System.setProperty("webdriver.gecko.driver", prop.getProperty("ffdriver.path"));
-            System.setProperty("webdriver.firefox.bin", "C:\\customFolder\\FF\\firefox.exe");  //comment path if FF in ProgrammFiles
+            //System.setProperty("webdriver.firefox.bin", "C:\\customFolder\\FF\\firefox.exe");  //comment path if FF in ProgrammFiles
 
             FirefoxProfile profile = new FirefoxProfile(new File(prop.getProperty("profile.path")));
             cap.setCapability(FirefoxDriver.PROFILE, profile);

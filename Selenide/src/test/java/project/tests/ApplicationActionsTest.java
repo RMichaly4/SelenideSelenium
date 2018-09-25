@@ -79,7 +79,7 @@ public class ApplicationActionsTest extends BrowserSettings {
 
     @Test
     public void selectUserProfile() throws Exception {
-        applicationActions.selectProfile(user2);
+        applicationActions.selectProfile(user3);
     }
 
     @Test
@@ -91,6 +91,11 @@ public class ApplicationActionsTest extends BrowserSettings {
     public void verifyElementColor() throws Exception {
         applicationActions.openJavascripAlertsPage();
         applicationActions.verifyElementColor(applicationActions.buttonClickForJSAlert().getCssValue("background-color"), "#2ba6cb");
+    }
+
+    @Test
+    public void compare2XlsxFiles() throws Exception {
+        applicationActions.exportXlsx();
     }
 
 //    @AfterClass
